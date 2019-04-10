@@ -1,21 +1,84 @@
 <html>
   <head>
-    <script src="chandra-release.js"></script>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Chandra App</title>
+    <link href="./Chandra.css" rel="stylesheet">
+    <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v4.2.0/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/aframe-curve-component/dist/aframe-curve-component.min.js"></script>
+    <script src="https://rawgit.com/protyze/aframe-alongpath-component/master/dist/aframe-alongpath-component.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
   </head>
   <body>
     <a-scene background="color: blue">
       <a-assets>
-        <a-asset-item id="chandra" src="data/entire_spacecraft.gltf">
+        <a-asset-item id="earth" src="data/earth_ball.gltf">
+        </a-asset-item>
+        <a-asset-item id="chandra" src="data/entire_spacecraft-plus.glb">
         </a-asset-item>
       </a-assets>
-      <a-entity gltf-model="#chandra">
-        <a-animation attribute="position" to="0 15 -90"
-                     direction="alternate" dur="24000"
-                     repeat="indefinite"></a-animation>
+
+      <a-curve id="tour">
+        <a-curve-point position="50 0 50"></a-curve-point>
+        <a-curve-point position="50.5 3.7 53"></a-curve-point>
+        <a-curve-point position="51.5 3.7 53"></a-curve-point>
+        <a-curve-point position="52 10 50"></a-curve-point>
+      </a-curve>
+
+      <a-cylinder position="0 0 0"
+                  rotation="0 0 90"
+                  radius="0.5"
+                  height="150"
+                  color="#FF0000">
+      </a-cylinder>
+      <a-cylinder position="0 0 0"
+                  rotation="0 0 0"
+                  radius="0.5"
+                  height="150"
+                  color="#00FF00">
+      </a-cylinder>
+      <a-cylinder position="0 0 0"
+                  rotation="90 0 0"
+                  radius="0.5"
+                  height="150"
+                  color="#0000FF">
+      </a-cylinder>
+      <a-entity id="tilted-earth"
+                rotation="-23 0 0">
+        <a-entity position="0 0 0"
+                  animation="property: rotation;
+                             dur: 5000000;
+                             loop: true;
+                             to: 0 36000 0">
+          <a-entity gltf-model="#earth"
+                    scale="1 1 1"
+                    position="-7.5 0 16"
+                    rotation="0 0 0">
+          </a-entity>
+        </a-entity>
+        <a-entity id="thingy" gltf-model="#chandra" model-r
+                  gltf-color="1 0 0"
+                  scale="3 3 3"
+                  position="50 -17 50"
+                  animation="property: rotation;
+                             dur: 1000;
+                             loop: true;
+                             to: 360 0 0">
+        </a-entity>
+
       </a-entity>
-      <a-camera>
-        <a-cursor></a-cursor>
-      </a-camera>
+      <a-entity camera alongpathevent
+                id="mainCamera"
+                position="0 1.6 0"
+                rotation="0 0 0"
+                look-controls="pointerLockEnabled: true"
+                alongpath="curve: #tour; loop: false; dur: 10000;">
+        <a-entity cursor
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03;"
+                  material="color: #CCC; opacity: 0.1; shader: flat;"></a-entity>
+      </a-entity>
 
     </a-scene>
   </body>
