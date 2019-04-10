@@ -11,15 +11,17 @@
     <script type="text/javascript" src="index.js"></script>
   </head>
   <body>
-    <a-scene background="color: blue">
+    <a-scene id="mainScene" background="color: #111133">
       <a-assets>
+        <img id="deepspace" src="data/space-star-background_4873749.png">
         <a-asset-item id="earth" src="data/earth_ball.gltf">
         </a-asset-item>
         <a-asset-item id="chandra" src="data/entire_spacecraft-plus.glb">
         </a-asset-item>
       </a-assets>
 
-      <a-curve id="tour">
+      <!-- <a-sky src="#deepspace"></a-sky> -->
+      <a-curve id="tour1">
         <a-curve-point position="50 0 50"></a-curve-point>
         <a-curve-point position="50.5 3.7 53"></a-curve-point>
         <a-curve-point position="51.5 3.7 53"></a-curve-point>
@@ -57,8 +59,7 @@
                     rotation="0 0 0">
           </a-entity>
         </a-entity>
-        <a-entity id="thingy" gltf-model="#chandra" model-r
-                  gltf-color="1 0 0"
+        <a-entity id="thingy" gltf-model="#chandra" two-sides
                   scale="3 3 3"
                   position="50 -17 50"
                   animation="property: rotation;
@@ -68,12 +69,19 @@
         </a-entity>
 
       </a-entity>
+      <a-entity id="textHolder"
+                position="0 0 0"
+                text="width: 1.5; color: white; align: center;
+                      anchor: center; side: double;
+                      value: *">
+      </a-entity>
+
       <a-entity camera alongpathevent
                 id="mainCamera"
                 position="0 1.6 0"
                 rotation="0 0 0"
                 look-controls="pointerLockEnabled: true"
-                alongpath="curve: #tour; loop: false; dur: 10000;">
+                alongpath="curve: #tour1; loop: false; dur: 10000;">
         <a-entity cursor
                   position="0 0 -1"
                   geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03;"
