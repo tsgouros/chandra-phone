@@ -14,25 +14,24 @@ var currentlyPlaying;
 AFRAME.registerComponent('two-sides', {
   schema: {default: 1.0},
   init: function () {
-    this.el.addEventListener('model-loaded', this.update.bind(this));
-  },
-  update: function () {
-    var mesh = this.el.getObject3D('mesh');
-    var data = this.data;
-    console.log("updating mesh:", mesh, data);
-    if (!mesh) {
-      console.log("Sorry, not a mesh.");
-      return;
-    }
-    mesh.traverse(function (node) {
-      if (node.isMesh) {
-
-        // Inside a gltf file, the material is apparently an array of materials.
-        len = node.material.length;
-        for (i = 0; i < len; i++) {
-          node.material[i].side = THREE.DoubleSide;
-        }
+    this.el.addEventListener('model-loaded', function (e) {
+      console.log("updating mesh-->>", e.target.object3D.children[0].children[0]);
+      var mesh = e.target.object3D.children[0].children[0];
+      var data = this.data;
+      if (!mesh) {
+        console.log("Sorry, not a mesh.");
+        return;
       }
+      mesh.traverse(function (node) {
+        if (node.isMesh) {
+
+          // Inside a gltf file, the material is apparently an array of materials.
+          len = node.material.length;
+          for (i = 0; i < len; i++) {
+            node.material[i].side = THREE.DoubleSide;
+          }
+        }
+      });
     });
   }
 });
@@ -60,13 +59,19 @@ setMeshColor = function(mesh, colorData) {
   if (!mesh) {
     console.log("********* oops, no mesh", mesh, colorData);
     return;
+  } else {
+    console.log("+++++++++ oops, mesh", mesh, colorData);
   }
 
   mesh.traverse(function(node) {
     if (node.isMesh) {
-      len = node.material.length;
-      for (i = 0; i < len; i++) {
-        node.material[i].color = colors;
+      if (Array.isArray(node.material)) {
+        len = node.material.length;
+        for (i = 0; i < len; i++) {
+          node.material[i].color = colors;
+        }
+      } else {
+        node.material.color = colors;
       }
     }
   });
@@ -88,6 +93,7 @@ AFRAME.registerComponent('gltf-color', {
 
     // Listen for the model-loaded event, then adjust the color of the object.
     this.el.addEventListener('model-loaded', function(event) {
+      console.log("model loaded..................", event, "\n");
       setMeshColor(event.target.getObject3D('mesh'), colorData);
     });
   },
@@ -96,6 +102,7 @@ AFRAME.registerComponent('gltf-color', {
     // in it, and sets the color of the given asset accordingly.
 
     var colorData = this.data;
+    console.log("update************", colorData, "\n");
     setMeshColor(this.el.getObject3D('mesh'), colorData);
   }
 });

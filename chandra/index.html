@@ -8,16 +8,17 @@
     <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v4.2.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/aframe-curve-component/dist/aframe-curve-component.min.js"></script>
     <script src="https://rawgit.com/protyze/aframe-alongpath-component/master/dist/aframe-alongpath-component.min.js"></script>
-    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="/index.js"></script>
   </head>
   <body>
-    <a-scene id="mainScene" background="color: #111133">
+    <a-scene id="mainScene" background="color: #051133">
       <a-assets>
         <img id="deepspace" src="data/space-star-background_4873749.png">
         <a-asset-item id="earth" src="data/earth_ball.gltf">
         </a-asset-item>
         <a-asset-item id="chandra" src="data/entire_spacecraft-plus.glb">
         </a-asset-item>
+        <a-asset-item id="nose" src="data/phton.glb"></a-asset-item>
       </a-assets>
 
       <!-- <a-sky src="#deepspace"></a-sky> -->
@@ -52,7 +53,7 @@
                   animation="property: rotation;
                              dur: 5000000;
                              loop: true;
-                             to: 0 36000 0">
+                             to: 0 3600 0">
           <a-entity gltf-model="#earth"
                     scale="1 1 1"
                     position="-7.5 0 16"
@@ -63,11 +64,18 @@
                   scale="3 3 3"
                   position="50 -17 50"
                   animation="property: rotation;
-                             dur: 1000;
+                             dur: 100000;
                              loop: true;
                              to: 360 0 0">
         </a-entity>
-
+        <a-entity id="phran" gltf-model="#nose"
+                  gltf-color="70 65 0"
+                  position="55 -18 55"
+                  rotation="0 240 -50"
+                  scale="2 2 2"
+                  animation="property: rotation;
+                             dur: 10000;
+                             to: -60 220 0"></a-entity>
       </a-entity>
       <a-entity id="textHolder"
                 position="0 0 0"
