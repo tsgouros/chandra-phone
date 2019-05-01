@@ -8,26 +8,21 @@
     <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v4.2.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/aframe-curve-component/dist/aframe-curve-component.min.js"></script>
     <script src="https://rawgit.com/protyze/aframe-alongpath-component/master/dist/aframe-alongpath-component.min.js"></script>
+    <script src="aframe-particle-system-component.min.js"></script>
     <script type="text/javascript" src="/index.js"></script>
   </head>
   <body>
-    <a-scene id="mainScene" background="color: #051133">
+    <a-scene id="mainScene" background="color: #051133" stats>
       <a-assets>
         <img id="deepspace" src="data/space-star-background_4873749.png">
         <a-asset-item id="earth" src="data/earth_ball.gltf">
         </a-asset-item>
         <a-asset-item id="chandra" src="data/entire_spacecraft-plus.glb">
         </a-asset-item>
-        <a-asset-item id="nose" src="data/phton.glb"></a-asset-item>
+        <a-asset-item id="nose" src="data/phran-the-photon.glb"></a-asset-item>
       </a-assets>
 
       <!-- <a-sky src="#deepspace"></a-sky> -->
-      <a-curve id="tour1">
-        <a-curve-point position="50 0 50"></a-curve-point>
-        <a-curve-point position="50.5 3.7 53"></a-curve-point>
-        <a-curve-point position="51.5 3.7 53"></a-curve-point>
-        <a-curve-point position="52 10 50"></a-curve-point>
-      </a-curve>
 
       <a-cylinder position="0 0 0"
                   rotation="0 0 90"
@@ -47,6 +42,12 @@
                   height="150"
                   color="#0000FF">
       </a-cylinder>
+      <a-curve id="tour1">
+        <a-curve-point position="200 0 50"></a-curve-point>
+        <a-curve-point position="200.5 3.7 53"></a-curve-point>
+        <a-curve-point position="201.5 3.7 53"></a-curve-point>
+        <a-curve-point position="209 5 50"></a-curve-point>
+      </a-curve>
       <a-entity id="tilted-earth"
                 rotation="-23 0 0">
         <a-entity position="0 0 0"
@@ -62,20 +63,101 @@
         </a-entity>
         <a-entity id="thingy" gltf-model="#chandra" two-sides
                   scale="3 3 3"
-                  position="50 -17 50"
+                  position="200 -17 50"
+                  rotation="0 40 0"
                   animation="property: rotation;
-                             dur: 100000;
+                             dur: 1000000;
+                             easing: linear;
                              loop: true;
-                             to: 360 0 0">
+                             to: 0 360 0">
+          <a-entity particle-system="color: #FFC800,#000000;
+                                     positionSpread: 0.1 0 0.1;
+                                     velocitySpread: 0 0 0;
+                                     velocity: 0 0 1;
+                                     accelerationSpread: 0 0 0;
+                                     texture: ./data/smokeparticle.png;
+                                     size: 0.2;
+                                     direction: 1;
+                                     rotationAxis: z;
+                                     rotationAngle: 90;
+                                     type: 1"
+                    visible="true"
+                    position="-13.8 0.0 -0.07"
+                    rotation="0 0 26.5">
+          </a-entity>
         </a-entity>
         <a-entity id="phran" gltf-model="#nose"
-                  gltf-color="70 65 0"
-                  position="55 -18 55"
-                  rotation="0 240 -50"
+                  material="shader: flat"
+                  gltf-color="1.0 0.8 0.0"
+                  position="205 -8 32"
+                  rotation="25 -20 10"
                   scale="2 2 2"
                   animation="property: rotation;
                              dur: 10000;
-                             to: -60 220 0"></a-entity>
+                             loop: true;
+                             to: 25 340 10">
+          <a-entity id="left-eye" 
+                    class="face"
+                    position="0.4 0.68 1.1"
+                    rotation="-20 10 0"
+                    geometry="primitive: circle; radius: 0.15" 
+                    material="color: orange; side: double;
+                              transparent: true; opacity:1.0">
+          </a-entity>
+          <a-entity id="left-eye-blink"
+                    class="face"
+                    position="0.4 0.68 1.1"
+                    rotation="-20 10 0"
+                    geometry="primitive: plane; height: 0.1; width: 0.4"
+                    material="color: blue; side: double; 
+                              transparent: true; opacity: 0.1">
+          </a-entity>
+          <a-entity id="right-eye" 
+                    class="face"
+                    position="-0.43 0.7 0.9"
+                    rotation="-20 -10 0"
+                    geometry="primitive: circle; radius: 0.15" 
+                    material="color: orange; side: double;
+                              transparent: true; opacity: 1.0">
+          </a-entity>
+          <a-entity id="right-eye-blink"
+                    class="face"
+                    position="-0.43 0.7 0.9"
+                    rotation="-20 -10 0"
+                    geometry="primitive: plane; height: 0.1; width: 0.4" 
+                    material="color: blue; side: double; 
+                              transparent: true; opacity: 0.1">
+          </a-entity>
+          <a-entity id="mouth-smile"
+                    class="face"
+                    position="0 0.2 1.1"
+                    rotation="32 -9 0"
+                    geometry="primitive: ring; 
+                              radiusInner: 0.3; radiusOuter: 0.5;
+                              thetaStart: 210; thetaLength: 120"
+                    material="side: double; color: blue;
+                              transparent: true; opacity: 1.0">
+          </a-entity>
+          <a-entity id="mouth-neutral"
+                    class="face"
+                    position="0 0 1.0"
+                    rotation="32 -9 0"
+                    geometry="primitive: plane; 
+                              height: 0.13; width: 0.8"
+                    material="side: double; color: orange;
+                              transparent: true; opacity: 0.0">
+          </a-entity>
+          <a-entity id="mouth-surprise"
+                    class="face"
+                    position="0 0 1.1"
+                    rotation="32 -9 0"
+                    geometry="primitive: circle; radius: 0.25"
+                    material="side: double; color: blue;
+                              transparent: true; opacity: 0.0">
+          </a-entity>
+        </a-entity>
+
+
       </a-entity>
       <a-entity id="textHolder"
                 position="0 0 0"
@@ -97,5 +179,6 @@
       </a-entity>
 
     </a-scene>
+    <script type="text/javascript" src="/post.js"></script>
   </body>
 </html>

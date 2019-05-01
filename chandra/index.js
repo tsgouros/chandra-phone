@@ -11,12 +11,80 @@ var soundList = [
 
 var currentlyPlaying;
 
+// AFRAME.registerComponent('mythreejsthing', {
+//   schema: {
+//     color: {
+//       default: '#F00'
+//     },
+//   },
+
+//   init: function() {
+//     this.update.bind(this);
+//     console.log("here is some mythreejsthing data", this.data);
+
+//     var this.particleGroup = new SPE.Group({
+//       texture: {
+//         value: THREE.ImageUtils.loadTexture('./img/smokeparticle.png')
+//       }
+//     });
+
+//     // General distributions.
+//     for( var i = 1; i < 4; ++i ) {
+//       var emitter = new SPE.Emitter({
+//         type: i,
+//         maxAge: {
+//           value: 1
+//         },
+//         position: {
+//           value: new THREE.Vector3(-50 + (i * 25), 40, 0),
+//           radius: 5,
+//           spread: new THREE.Vector3( 3, 3, 3 )
+//         },
+
+//         color: {
+//           value: [ new THREE.Color('white'), new THREE.Color('red') ]
+//         },
+
+//         size: {
+//           value: 1
+//         },
+//         isStatic: true,
+//         particleCount: 250
+//       });
+
+//       this.particleGroup.addEmitter( emitter );
+//     }
+//   },
+
+//   update: function() {
+//     var material = new THREE.MeshBasicMaterial({
+//       color: this.data.color,
+//       wireframe: true
+//     });
+
+//     var geometry = new THREE.BoxGeometry(10, 10, 10);
+
+//     this.el.setObject3D('mesh', new THREE.Mesh(geometry, material));
+//   },
+
+//   remove: function() {
+//     this.el.removeObject3D('mesh');
+//   }
+// });
+
+
+// This is a solution to provide a second side of the model for the
+// Chandra object.  This is not a general solution because I obviously
+// don't really understand the structure of these objects.
 AFRAME.registerComponent('two-sides', {
   schema: {default: 1.0},
   init: function () {
     this.el.addEventListener('model-loaded', function (e) {
-      console.log("updating mesh-->>", e.target.object3D.children[0].children[0]);
-      var mesh = e.target.object3D.children[0].children[0];
+      console.log("this is what the cat dragged in:", e);
+      // The 1 and 0 here were determined by examining the e argument
+      // logged in the previous line and looking for the object with
+      // lots of different materials.  This is a hack, yes.
+      var mesh = e.target.object3D.children[1].children[0];
       var data = this.data;
       if (!mesh) {
         console.log("Sorry, not a mesh.");
@@ -25,10 +93,15 @@ AFRAME.registerComponent('two-sides', {
       mesh.traverse(function (node) {
         if (node.isMesh) {
 
-          // Inside a gltf file, the material is apparently an array of materials.
-          len = node.material.length;
-          for (i = 0; i < len; i++) {
-            node.material[i].side = THREE.DoubleSide;
+          // Inside a gltf file, the material is apparently an array
+          // of materials.
+          if (Array.isArray(node.material)) {
+            len = node.material.length;
+            for (i = 0; i < len; i++) {
+              node.material[i].side = THREE.DoubleSide;
+            }
+          } else {
+            node.material.side = THREE.DoubleSide;
           }
         }
       });
@@ -60,18 +133,21 @@ setMeshColor = function(mesh, colorData) {
     console.log("********* oops, no mesh", mesh, colorData);
     return;
   } else {
-    console.log("+++++++++ oops, mesh", mesh, colorData);
+    console.log("??+++++++ oops, mesh", mesh, colorData);
   }
 
   mesh.traverse(function(node) {
     if (node.isMesh) {
+      console.log("*** this is the material:", node.material);
       if (Array.isArray(node.material)) {
         len = node.material.length;
         for (i = 0; i < len; i++) {
           node.material[i].color = colors;
+          node.material[i].flatShading = true;
         }
       } else {
         node.material.color = colors;
+        node.material.flatShading = true;
       }
     }
   });
