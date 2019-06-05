@@ -205,10 +205,40 @@ AFRAME.registerComponent('gltf-color', {
 var tour = {
   // This segment is junk, just testing.
   tour1:{dur: "1000",
+         next: "tour2",
+         audio: "",
+         playWhile: false,
+         text: "Hello world! 1",
+         noClickText: "Chandra here!.",
+         pause: 6000,
+         textOffset: {x: 0, y: -0.5, z: -1},
+         textRotate: {x: 0, y: 0, z: 0}
+        },
+  tour2:{dur: "1000",
+         next: "tour3",
+         audio: "",
+         playWhile: false,
+         text: "Hello world! 2",
+         noClickText: "Chandra here!.",
+         pause: 6000,
+         textOffset: {x: 0, y: -0.5, z: -1},
+         textRotate: {x: 0, y: 0, z: 0}
+        },
+  tour3:{dur: "1000",
+         next: "tour4",
+         audio: "",
+         playWhile: false,
+         text: "Hello world! 3",
+         noClickText: "Chandra here!.",
+         pause: 6000,
+         textOffset: {x: 0, y: -0.5, z: -1},
+         textRotate: {x: 0, y: 0, z: 0}
+        },
+  tour4:{dur: "1000",
          next: "tour1",
          audio: "",
          playWhile: false,
-         text: "Hi there!",
+         text: "Hello world! 4",
          noClickText: "Chandra here!.",
          pause: 6000,
          textOffset: {x: 0, y: -0.5, z: -1},
@@ -364,3 +394,109 @@ AFRAME.registerComponent('alongpathevent', {
     console.log("update called of alongpathevent!");
   }
 });
+
+AFRAME.registerComponent('repeat', {
+  schema: {
+    N: {type: 'vec3', default: '4 4 4'},
+    d: {type: 'vec3', default: '1 1 1'},
+  },
+
+  init: function () {
+    this.el.addEventListener('model-loaded', this.update.bind(this));
+  },
+
+  update: function () {
+    var mesh = this.el.getObject3D('mesh');
+
+    var cloneMesh = this.el.getOrCreateObject3D('clones', THREE.Group);
+
+    var parent = new THREE.Object3D();
+
+    parent.add(mesh);
+
+    console.log(this.data.N.x, "---", this.data.N.y, "---", this.data.N.z);
+    for (i = 0; i < this.data.N.x; i++) {
+      for (j = 0; j < this.data.N.y; j++) {
+        for (k = 0; k < this.data.N.z; k++) {
+          console.log(i,j,k, this.data.d);
+
+          var child = parent.clone(true);
+
+          child.position.copy(mesh.position);
+          child.position.set(i * this.data.d.x,
+                             j * this.data.d.y,
+                             k * this.data.d.z);
+
+          child.children[0].material = parent.children[0].material.clone();
+
+          child.children[0].material.color.r +=
+            (1 - child.children[0].material.color.r) * i * 1/this.data.N.x;
+          child.children[0].material.color.g +=
+            (1 - child.children[0].material.color.g) * j * 1/this.data.N.y;
+          child.children[0].material.color.b +=
+            (1 - child.children[0].material.color.b) * k * 1/this.data.N.z;
+
+
+          cloneMesh.add(child);
+        }
+      }
+    }
+
+  },
+
+  remove: function () {
+    // Do something the component or its entity is detached.
+  },
+
+  tick: function (time, timeDelta) {
+    // Do something on every scene tick or frame.
+  }
+});
+
+
+// AFRAME.registerComponent('clone-along-curve', {
+
+
+//     update: function () {
+//         this.remove();
+
+
+//         if (!this.el.getObject3D('clones') && this.curve && this.curve.curve) {
+
+//             var length = this.curve.curve.getLength();
+//             var start = 0;
+//             var counter = start;
+
+//             var cloneMesh = this.el.getOrCreateObject3D('clones', THREE.Group);
+
+//             var parent = new THREE.Object3D();
+//             mesh.scale.set(this.data.scale.x, this.data.scale.y, this.data.scale.z);
+//             mesh.rotation.set(degToRad(this.data.rotation.x), degToRad(this.data.rotation.y), degToRad(this.data.rotation.z));
+//             mesh.rotation.order = 'YXZ';
+
+//             parent.add(mesh);
+
+//             while (counter <= length) {
+//                 var child = parent.clone(true);
+
+//                 child.position.copy(this.curve.curve.getPointAt(counter / length));
+
+//                 tangent = this.curve.curve.getTangentAt(counter / length).normalize();
+
+//                 child.quaternion.setFromUnitVectors(zAxis, tangent);
+
+//                 cloneMesh.add(child);
+
+//                 counter += this.data.spacing;
+//             }
+//         }
+//     },
+
+//     remove: function () {
+//         this.curve = null;
+//         if (this.el.getObject3D('clones')) {
+//             this.el.removeObject3D('clones');
+//         }
+//     }
+
+// });

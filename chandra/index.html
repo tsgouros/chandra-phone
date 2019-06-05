@@ -14,45 +14,71 @@
   <body>
     <a-scene id="mainScene" background="color: #051133" stats>
       <a-assets>
-        <img id="deepspace" src="data/space-star-background_4873749.png">
+        <!--<img id="deepspace" src="data/space-star-background_4873749.png">-->
         <a-asset-item id="earth" src="data/earth_ball.gltf">
         </a-asset-item>
-        <a-asset-item id="chandra" src="data/entire_spacecraft-plus.glb">
+        <a-asset-item id="chandra" src="data/entire-spacecraft-med.glb">
         </a-asset-item>
         <a-asset-item id="nose" src="data/phran-the-photon.glb"></a-asset-item>
       </a-assets>
 
       <!-- <a-sky src="#deepspace"></a-sky> -->
 
-      <a-cylinder position="0 0 0"
+      <a-cylinder position="970 0 50"
                   rotation="0 0 90"
                   radius="0.5"
                   height="150"
                   color="#FF0000">
       </a-cylinder>
-      <a-cylinder position="0 0 0"
+      <a-cylinder position="970 0 50"
                   rotation="0 0 0"
                   radius="0.5"
                   height="150"
                   color="#00FF00">
       </a-cylinder>
-      <a-cylinder position="0 0 0"
+      <a-cylinder position="970 0 50"
                   rotation="90 0 0"
                   radius="0.5"
                   height="150"
                   color="#0000FF">
       </a-cylinder>
+
+
+
       <a-curve id="tour1">
-        <a-curve-point position="200 0 50"></a-curve-point>
-        <a-curve-point position="200.5 3.7 53"></a-curve-point>
-        <a-curve-point position="201.5 3.7 53"></a-curve-point>
-        <a-curve-point position="209 5 50"></a-curve-point>
+        <a-curve-point position="970 0 50"></a-curve-point>
+        <a-curve-point position="970.5 3.7 53"></a-curve-point>
+        <a-curve-point position="971.5 3.7 53"></a-curve-point>
+        <a-curve-point position="979 5 50"></a-curve-point>
       </a-curve>
+      <a-curve id="tour2">
+        <a-curve-point position="970.5 3.7 53"></a-curve-point>
+        <a-curve-point position="970.5 3.7 53"></a-curve-point>
+      </a-curve>
+      <a-curve id="tour3">
+        <a-curve-point position="970.5 4.8 53.5"></a-curve-point>
+        <a-curve-point position="970.5 4.8 53.5"></a-curve-point>
+      </a-curve>
+      <a-curve id="tour4">
+        <a-curve-point position="972.5 3.7 53"></a-curve-point>
+        <a-curve-point position="972.5 3.7 53"></a-curve-point>
+      </a-curve>
+      <a-draw-curve curveref="#tour1" width="5"
+                    material="shader: line; color: red;"></a-draw-curve>
+
+      <!--<a-entity clone-along-curve="curve: #tour1; spacing: 0.2; scale:
+                                   1 1 1; rotation: 0 0 0;"
+                geometry="primitive:box; height:0.1; width:0.2;
+                depth:0.1">
+      </a-entity>-->
+
+
       <a-entity id="tilted-earth"
                 rotation="-23 0 0">
         <a-entity position="0 0 0"
                   animation="property: rotation;
-                             dur: 5000000;
+                             dur: 200000;
+                             easing: linear;
                              loop: true;
                              to: 0 3600 0">
           <a-entity gltf-model="#earth"
@@ -63,7 +89,7 @@
         </a-entity>
         <a-entity id="thingy" gltf-model="#chandra" two-sides
                   scale="3 3 3"
-                  position="200 -17 50"
+                  position="970 -17 50"
                   rotation="0 40 0"
                   animation="property: rotation;
                              dur: 1000000;
@@ -72,10 +98,10 @@
                              to: 0 360 0">
           <a-entity particle-system="color: #FFC800,#000000;
                                      positionSpread: 0.1 0 0.1;
-                                     velocitySpread: 0 0 0;
+                                     velocitySpread: 0 0 0.1;
                                      velocity: 0 0 1;
                                      accelerationSpread: 0 0 0;
-                                     texture: ./data/smokeparticle.png;
+                                     texture: ./data/test.png;
                                      size: 0.2;
                                      direction: 1;
                                      rotationAxis: z;
@@ -85,22 +111,42 @@
                     position="-13.8 0.0 -0.07"
                     rotation="0 0 26.5">
           </a-entity>
+          <a-box position="0 0 0" width="0.1" height="0.1" depth="0.1"
+                 color="#111111" repeat="N: 3 3 5;"></a-box>
+          <a-curve id="tour1a">
+            <a-curve-point position="0 0 0"></a-curve-point>
+            <a-curve-point position="0 2 0"></a-curve-point>
+            <a-curve-point position="0 3 0"></a-curve-point>
+            <a-curve-point position="0 3 5"></a-curve-point>
+          </a-curve>
+          <a-entity camera alongpathevent
+                id="mainCamera"
+                position="0 1.6 0"
+                rotation="0 0 0"
+                look-controls="pointerLockEnabled: true"
+                alongpath="curve: #tour1a; loop: false; dur: 10000;">
+            <a-entity cursor
+                      position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03;"
+                      material="color: #CCC; opacity: 0.1; shader: flat;"></a-entity>
+          </a-entity>
         </a-entity>
         <a-entity id="phran" gltf-model="#nose"
                   material="shader: flat"
                   gltf-color="1.0 0.8 0.0"
-                  position="205 -8 32"
+                  position="975 -8 32"
                   rotation="25 -20 10"
                   scale="2 2 2"
                   animation="property: rotation;
                              dur: 10000;
+                             easing: linear;
                              loop: true;
                              to: 25 340 10">
-          <a-entity id="left-eye" 
+          <a-entity id="left-eye"
                     class="face"
                     position="0.4 0.68 1.1"
                     rotation="-20 10 0"
-                    geometry="primitive: circle; radius: 0.15" 
+                    geometry="primitive: circle; radius: 0.15"
                     material="color: orange; side: double;
                               transparent: true; opacity:1.0">
           </a-entity>
@@ -109,14 +155,14 @@
                     position="0.4 0.68 1.1"
                     rotation="-20 10 0"
                     geometry="primitive: plane; height: 0.1; width: 0.4"
-                    material="color: blue; side: double; 
+                    material="color: blue; side: double;
                               transparent: true; opacity: 0.1">
           </a-entity>
-          <a-entity id="right-eye" 
+          <a-entity id="right-eye"
                     class="face"
                     position="-0.43 0.7 0.9"
                     rotation="-20 -10 0"
-                    geometry="primitive: circle; radius: 0.15" 
+                    geometry="primitive: circle; radius: 0.15"
                     material="color: orange; side: double;
                               transparent: true; opacity: 1.0">
           </a-entity>
@@ -124,15 +170,15 @@
                     class="face"
                     position="-0.43 0.7 0.9"
                     rotation="-20 -10 0"
-                    geometry="primitive: plane; height: 0.1; width: 0.4" 
-                    material="color: blue; side: double; 
+                    geometry="primitive: plane; height: 0.1; width: 0.4"
+                    material="color: blue; side: double;
                               transparent: true; opacity: 0.1">
           </a-entity>
           <a-entity id="mouth-smile"
                     class="face"
                     position="0 0.2 1.1"
                     rotation="32 -9 0"
-                    geometry="primitive: ring; 
+                    geometry="primitive: ring;
                               radiusInner: 0.3; radiusOuter: 0.5;
                               thetaStart: 210; thetaLength: 120"
                     material="side: double; color: blue;
@@ -142,7 +188,7 @@
                     class="face"
                     position="0 0 1.0"
                     rotation="32 -9 0"
-                    geometry="primitive: plane; 
+                    geometry="primitive: plane;
                               height: 0.13; width: 0.8"
                     material="side: double; color: orange;
                               transparent: true; opacity: 0.0">
@@ -166,17 +212,6 @@
                       value: *">
       </a-entity>
 
-      <a-entity camera alongpathevent
-                id="mainCamera"
-                position="0 1.6 0"
-                rotation="0 0 0"
-                look-controls="pointerLockEnabled: true"
-                alongpath="curve: #tour1; loop: false; dur: 10000;">
-        <a-entity cursor
-                  position="0 0 -1"
-                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03;"
-                  material="color: #CCC; opacity: 0.1; shader: flat;"></a-entity>
-      </a-entity>
 
     </a-scene>
     <script type="text/javascript" src="/post.js"></script>
