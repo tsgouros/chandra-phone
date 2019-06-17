@@ -81,28 +81,44 @@ AFRAME.registerComponent('two-sides', {
   init: function () {
     this.el.addEventListener('model-loaded', function (e) {
       console.log("this is what the cat dragged in:", e);
-      // The 1 and 0 here were determined by examining the e argument
+      // The children indices here were determined by examining the e argument
       // logged in the previous line and looking for the object with
-      // lots of different materials.  This is a hack, yes.
-      var mesh = e.target.object3D.children[1].children[0];
+      // lots of different materials.  Yes, this is an unforgivable hack.
+      var mesh = e.target.object3D.children[9].children[4];
       var data = this.data;
       if (!mesh) {
-        console.log("Sorry, not a mesh.");
+        console.log("Sorry, not a mesh:");
         return;
       }
       mesh.traverse(function (node) {
+        console.log("here's a child:", node, node.isMesh);
         if (node.isMesh) {
+          node.material.side = THREE.DoubleSide;
+          node.material.opacity = 0.98;
+
 
           // Inside a gltf file, the material is apparently an array
           // of materials.
-          if (Array.isArray(node.material)) {
-            len = node.material.length;
-            for (i = 0; i < len; i++) {
-              node.material[i].side = THREE.DoubleSide;
-            }
-          } else {
-            node.material.side = THREE.DoubleSide;
-          }
+          // if (Array.isArray(node.material)) {
+          //   len = node.material.length;
+          //   for (i = 0; i < len; i++) {
+          //     node.material[i].side = THREE.DoubleSide;
+          //   }
+          // } else {
+          //   node.material.side = THREE.DoubleSide;
+          // }
+        }
+      });
+      // Now do the same for the mirror.  Again, an unforgivable hack.
+      var mesh = e.target.object3D.children[9].children[5];
+      if (!mesh) {
+        console.log("Sorry, not a mesh:");
+        return;
+      }
+      mesh.traverse(function (node) {
+        console.log("here's a child:", node, node.isMesh);
+        if (node.isMesh) {
+          node.material.side = THREE.DoubleSide;
         }
       });
     });
@@ -203,42 +219,61 @@ AFRAME.registerComponent('gltf-color', {
 //                camera position.
 //    textRotate- The euler angles of the text location.
 var tour = {
-  // This segment is junk, just testing.
-  tour1:{dur: "1000",
-         next: "tour2",
+  tour1a:{dur: "1000",
+         next: "tour1b",
          audio: "",
          playWhile: false,
-         text: "Hello world! 1",
+         text: "X rays are too energetic to bounce off mirrors, except when they just skim the surface. \nChandra's iridium mirrors are shaped like \nfunnels to focus X rays on the detector.",
+         noClickText: "Chandra here!.",
+         pause: 6000,
+         textOffset: {x: 0.2, y: -0.25, z: -1},
+         textRotate: {x: -10, y: -30, z: 0}
+        },
+  tour1b:{dur: "1000",
+         next: "tour1c",
+         audio: "",
+         playWhile: false,
+         text: "Chandra uses a cameras and spectrometers to analyze the X-rays coming from deep space.",
+         noClickText: "Chandra here!.",
+         pause: 6000,
+         textOffset: {x: 0, y: 0, z: -1},
+         textRotate: {x: 0, y: 90, z: 0}
+        },
+  tour1c:{dur: "1000",
+         next: "tour1d",
+         audio: "",
+         playWhile: false,
+         text: "Chandra's solar collectors are used to power the telescope's detectors and its radio contact with the earth.  The electricity is also used to provide heat to the mirrors to keep them from deforming from the cold temperatures of space.",
          noClickText: "Chandra here!.",
          pause: 6000,
          textOffset: {x: 0, y: -0.5, z: -1},
          textRotate: {x: 0, y: 0, z: 0}
         },
-  tour2:{dur: "1000",
-         next: "tour3",
+  tour1d:{dur: "1000",
+         next: "tour1e",
          audio: "",
          playWhile: false,
-         text: "Hello world! 2",
+         text: "Chandra's thrusters are used to control the spacecraft's orbit, and also to help stabilize the telescope after it has been aimed at a new location.  Chandra aims with high-precision gyroscopes.",
          noClickText: "Chandra here!.",
          pause: 6000,
          textOffset: {x: 0, y: -0.5, z: -1},
          textRotate: {x: 0, y: 0, z: 0}
         },
-  tour3:{dur: "1000",
-         next: "tour4",
+  tour1e:{dur: "1000",
+         next: "tour1f",
          audio: "",
          playWhile: false,
-         text: "Hello world! 3",
-         noClickText: "Chandra here!.",
+         text: "Chandra communicates with earth via NASA's Deep Space Network, made up of listening stations all over the world.  Once on earth, the data makes its way to the Chandra X-Ray Center, in Cambridge, Massachusetts.",
+          noClickText: "Chandra here!.",
          pause: 6000,
          textOffset: {x: 0, y: -0.5, z: -1},
          textRotate: {x: 0, y: 0, z: 0}
         },
-  tour4:{dur: "1000",
-         next: "tour1",
+  tour1f:{dur: "1000",
+         next: "tour1a",
          audio: "",
          playWhile: false,
-         text: "Hello world! 4",
+         text: "",
          noClickText: "Chandra here!.",
          pause: 6000,
          textOffset: {x: 0, y: -0.5, z: -1},
@@ -395,10 +430,10 @@ AFRAME.registerComponent('alongpathevent', {
   }
 });
 
-AFRAME.registerComponent('repeat', {
+AFRAME.registerComponent('rept', {
   schema: {
-    N: {type: 'vec3', default: '4 4 4'},
-    d: {type: 'vec3', default: '1 1 1'},
+    N: {type: 'vec3', default: {x: 4, y: 4, z: 4}},
+    d: {type: 'vec3', default: {x: 1, y: 1, z: 1}},
   },
 
   init: function () {
@@ -418,7 +453,6 @@ AFRAME.registerComponent('repeat', {
     for (i = 0; i < this.data.N.x; i++) {
       for (j = 0; j < this.data.N.y; j++) {
         for (k = 0; k < this.data.N.z; k++) {
-          console.log(i,j,k, this.data.d);
 
           var child = parent.clone(true);
 

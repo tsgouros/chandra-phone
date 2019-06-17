@@ -8,16 +8,20 @@
     <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v4.2.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/aframe-curve-component/dist/aframe-curve-component.min.js"></script>
     <script src="https://rawgit.com/protyze/aframe-alongpath-component/master/dist/aframe-alongpath-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-render-order-component@1.1.0/dist/aframe-render-order-component.min.js"></script>
     <script src="aframe-particle-system-component.min.js"></script>
-    <script type="text/javascript" src="/index.js"></script>
+    <script type="text/javascript" src="./index.js"></script>
   </head>
   <body>
-    <a-scene id="mainScene" background="color: #051133" stats>
+    <a-scene id="mainScene"
+             background="color: #051133"
+             render-order="background, earth, object, particles, captions"
+             stats>
       <a-assets>
         <!--<img id="deepspace" src="data/space-star-background_4873749.png">-->
         <a-asset-item id="earth" src="data/earth_ball.gltf">
         </a-asset-item>
-        <a-asset-item id="chandra" src="data/entire-spacecraft-med.glb">
+        <a-asset-item id="chandra" src="data/entire-spacecraft-plus-mirror.glb">
         </a-asset-item>
         <a-asset-item id="nose" src="data/phran-the-photon.glb"></a-asset-item>
       </a-assets>
@@ -44,27 +48,8 @@
       </a-cylinder>
 
 
-
-      <a-curve id="tour1">
-        <a-curve-point position="970 0 50"></a-curve-point>
-        <a-curve-point position="970.5 3.7 53"></a-curve-point>
-        <a-curve-point position="971.5 3.7 53"></a-curve-point>
-        <a-curve-point position="979 5 50"></a-curve-point>
-      </a-curve>
-      <a-curve id="tour2">
-        <a-curve-point position="970.5 3.7 53"></a-curve-point>
-        <a-curve-point position="970.5 3.7 53"></a-curve-point>
-      </a-curve>
-      <a-curve id="tour3">
-        <a-curve-point position="970.5 4.8 53.5"></a-curve-point>
-        <a-curve-point position="970.5 4.8 53.5"></a-curve-point>
-      </a-curve>
-      <a-curve id="tour4">
-        <a-curve-point position="972.5 3.7 53"></a-curve-point>
-        <a-curve-point position="972.5 3.7 53"></a-curve-point>
-      </a-curve>
-      <a-draw-curve curveref="#tour1" width="5"
-                    material="shader: line; color: red;"></a-draw-curve>
+      <!--<a-draw-curve curveref="#tour1" width="5"
+                    material="shader: line; color: red;"></a-draw-curve>-->
 
       <!--<a-entity clone-along-curve="curve: #tour1; spacing: 0.2; scale:
                                    1 1 1; rotation: 0 0 0;"
@@ -91,6 +76,7 @@
                   scale="3 3 3"
                   position="970 -17 50"
                   rotation="0 40 0"
+                  render-order="object"
                   animation="property: rotation;
                              dur: 1000000;
                              easing: linear;
@@ -99,26 +85,57 @@
           <a-entity particle-system="color: #FFC800,#000000;
                                      positionSpread: 0.1 0 0.1;
                                      velocitySpread: 0 0 0.1;
-                                     velocity: 0 0 1;
+                                     velocity: 0 0 0.01;
                                      accelerationSpread: 0 0 0;
                                      texture: ./data/test.png;
-                                     size: 0.2;
+                                     size: 0.1;
                                      direction: 1;
                                      rotationAxis: z;
                                      rotationAngle: 90;
                                      type: 1"
                     visible="true"
                     position="-13.8 0.0 -0.07"
-                    rotation="0 0 26.5">
+                    rotation="0 0 26.5"
+                    render-order="particles">
           </a-entity>
-          <a-box position="0 0 0" width="0.1" height="0.1" depth="0.1"
-                 color="#111111" repeat="N: 3 3 5;"></a-box>
+          <!--<a-box position="0 0 0" width="0.1" height="0.1" depth="0.1"
+                 color="#111111" rept="N: 3 3 5;"></a-box>-->
           <a-curve id="tour1a">
             <a-curve-point position="0 0 0"></a-curve-point>
             <a-curve-point position="0 2 0"></a-curve-point>
             <a-curve-point position="0 3 0"></a-curve-point>
-            <a-curve-point position="0 3 5"></a-curve-point>
+            <a-curve-point position="-2 0 0"></a-curve-point>
+            <a-curve-point position="-0.5 0.2 0"></a-curve-point>
+            <a-curve-point position="-0.25 0.1 0"></a-curve-point>
+            <a-curve-point position="-0.25 0.0 0"></a-curve-point>
           </a-curve>
+          <a-curve id="tour1b">
+            <a-curve-point position="-0.25 0 0"></a-curve-point>
+            <a-curve-point position="0.25 0 0"></a-curve-point>
+          </a-curve>
+          <a-curve id="tour1c">
+            <a-curve-point position="0.25 0 0"></a-curve-point>
+            <a-curve-point position="-2 1.5 1.5"></a-curve-point>
+          </a-curve>
+          <a-curve id="tour1d">
+            <a-curve-point position="0.25 0 0"></a-curve-point>
+            <a-curve-point position="-2 1.5 1.5"></a-curve-point>
+          </a-curve>
+          <a-curve id="tour1e">
+            <a-curve-point position="0.25 0 0"></a-curve-point>
+            <a-curve-point position="-2 1.5 1.5"></a-curve-point>
+          </a-curve>
+          <a-curve id="tour1f">
+            <a-curve-point position="0.25 0 0"></a-curve-point>
+            <a-curve-point position="-2 1.5 1.5"></a-curve-point>
+          </a-curve>
+          <a-entity id="textHolder"
+                    position="0 0 0"
+                    render-order="captions"
+                    text="width: 1.5; color: white; align: center;
+                          anchor: center; side: double;
+                          value: *">
+          </a-entity>
           <a-entity camera alongpathevent
                 id="mainCamera"
                 position="0 1.6 0"
@@ -205,15 +222,8 @@
 
 
       </a-entity>
-      <a-entity id="textHolder"
-                position="0 0 0"
-                text="width: 1.5; color: white; align: center;
-                      anchor: center; side: double;
-                      value: *">
-      </a-entity>
-
 
     </a-scene>
-    <script type="text/javascript" src="/post.js"></script>
+    <script type="text/javascript" src="./post.js"></script>
   </body>
 </html>
