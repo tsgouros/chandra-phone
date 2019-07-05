@@ -80,18 +80,18 @@ AFRAME.registerComponent('two-sides', {
   schema: {default: 1.0},
   init: function () {
     this.el.addEventListener('model-loaded', function (e) {
-      console.log("this is what the cat dragged in:", e);
+      //console.log("this is what the cat dragged in:", e);
       // The children indices here were determined by examining the e argument
       // logged in the previous line and looking for the object with
       // lots of different materials.  Yes, this is an unforgivable hack.
-      var mesh = e.target.object3D.children[9].children[4];
+      var mesh = e.target.object3D.children[10].children[4];
       var data = this.data;
       if (!mesh) {
         console.log("Sorry, not a mesh:");
         return;
       }
       mesh.traverse(function (node) {
-        console.log("here's a child:", node, node.isMesh);
+        //console.log("here's a model child:", node, node.isMesh);
         if (node.isMesh) {
           node.material.side = THREE.DoubleSide;
           node.material.opacity = 0.98;
@@ -110,13 +110,13 @@ AFRAME.registerComponent('two-sides', {
         }
       });
       // Now do the same for the mirror.  Again, an unforgivable hack.
-      var mesh = e.target.object3D.children[9].children[5];
+      var mesh = e.target.object3D.children[10].children[5];
       if (!mesh) {
         console.log("Sorry, not a mesh:");
         return;
       }
       mesh.traverse(function (node) {
-        console.log("here's a child:", node, node.isMesh);
+        //console.log("here's a mirror child:", node, node.isMesh);
         if (node.isMesh) {
           node.material.side = THREE.DoubleSide;
         }
@@ -154,7 +154,7 @@ setMeshColor = function(mesh, colorData) {
 
   mesh.traverse(function(node) {
     if (node.isMesh) {
-      console.log("*** this is the material:", node.material);
+      //console.log("*** this is the material:", node.material);
       if (Array.isArray(node.material)) {
         len = node.material.length;
         for (i = 0; i < len; i++) {
@@ -185,7 +185,7 @@ AFRAME.registerComponent('gltf-color', {
 
     // Listen for the model-loaded event, then adjust the color of the object.
     this.el.addEventListener('model-loaded', function(event) {
-      console.log("model loaded..................", event, "\n");
+      //console.log("model loaded..................", event, "\n");
       setMeshColor(event.target.getObject3D('mesh'), colorData);
     });
   },
@@ -194,7 +194,7 @@ AFRAME.registerComponent('gltf-color', {
     // in it, and sets the color of the given asset accordingly.
 
     var colorData = this.data;
-    console.log("update************", colorData, "\n");
+    //console.log("update************", colorData, "\n");
     setMeshColor(this.el.getObject3D('mesh'), colorData);
   }
 });
@@ -219,65 +219,85 @@ AFRAME.registerComponent('gltf-color', {
 //                camera position.
 //    textRotate- The euler angles of the text location.
 var tour = {
-  tour1a:{dur: "1000",
-         next: "tour1b",
+  preOrbit:{dur: "1000",
+            audio: "",
+            playWhile: false,
+            text: "Hello from the Chandra X-Ray Observatory. Click anywhere on the screen to orbit the spacecraft and see it from all angles.  Clicking will move you along to another stop on the tour.",
+            noClickText: "Hello from the Chandra X-Ray Observatory. \nCome along on a little tour.",
+            pause: 6000,
+            textOffset: {x: 0, y: -0.5, z: -1},
+            textRotate: {x: 0, y: 0, z: 0},
+            next: "tour6",
+           },
+  tour6:{dur: "10000",
          audio: "",
          playWhile: false,
-         text: "X rays are too energetic to bounce off mirrors, except when they just skim the surface. \nChandra's iridium mirrors are shaped like \nfunnels to focus X rays on the detector.",
-         noClickText: "Chandra here!.",
-         pause: 6000,
-         textOffset: {x: 0.2, y: -0.25, z: -1},
-         textRotate: {x: -10, y: -30, z: 0}
-        },
-  tour1b:{dur: "1000",
-         next: "tour1c",
-         audio: "",
-         playWhile: false,
-         text: "Chandra uses a cameras and spectrometers to analyze the X-rays coming from deep space.",
-         noClickText: "Chandra here!.",
+         text: "Chandra is almost 14m long, about the size of a school bus.  It is only centimeters smaller than the largest payload the space shuttle could carry.",
+         noClickText: "Chandra is almost 14m long, \nabout the size of a school bus.\n  It is only centimeters smaller than\n the largest payload the\n space shuttle could carry.",
          pause: 6000,
          textOffset: {x: 0, y: 0, z: -1},
-         textRotate: {x: 0, y: 90, z: 0}
+         textRotate: {x: 0, y: 0, z: 0},
+         next: "tour1",
         },
-  tour1c:{dur: "1000",
-         next: "tour1d",
+  tour1:{dur: "7000",
          audio: "",
          playWhile: false,
-         text: "Chandra's solar collectors are used to power the telescope's detectors and its radio contact with the earth.  The electricity is also used to provide heat to the mirrors to keep them from deforming from the cold temperatures of space.",
-         noClickText: "Chandra here!.",
+         text: "X-rays are too energetic to bounce off mirrors, except when they just skim the surface. \nChandra's iridium mirrors are shaped like \nfunnels to focus X rays on the detector.",
+         noClickText: "X-rays are too energetic\n to bounce off mirrors, except\n when they just skim the surface. \nChandra's iridium mirrors\n are shaped like funnels\n to focus X rays on the detector.",
          pause: 6000,
-         textOffset: {x: 0, y: -0.5, z: -1},
-         textRotate: {x: 0, y: 0, z: 0}
+         textOffset: {x: 0.2, y: -0.25, z: -1},
+         textRotate: {x: -10, y: -30, z: 0},
+         next: "tour2",
         },
-  tour1d:{dur: "1000",
-         next: "tour1e",
+  tour2:{dur: "5000",
          audio: "",
          playWhile: false,
-         text: "Chandra's thrusters are used to control the spacecraft's orbit, and also to help stabilize the telescope after it has been aimed at a new location.  Chandra aims with high-precision gyroscopes.",
-         noClickText: "Chandra here!.",
+         text: "Chandra uses cameras and spectrometers\n at its target to analyze the X-rays\n coming from deep space.",
+         noClickText: "Chandra uses cameras and\n spectrometers at its target\n to analyze the X-rays\n coming from deep space.",
          pause: 6000,
-         textOffset: {x: 0, y: -0.5, z: -1},
-         textRotate: {x: 0, y: 0, z: 0}
+         textOffset: {x: -1, y: 0, z: 0},
+         textRotate: {x: 0, y: 90, z: 0},
+         next: "tour3",
         },
-  tour1e:{dur: "1000",
-         next: "tour1f",
+  tour3:{dur: "5000",
          audio: "",
          playWhile: false,
-         text: "Chandra communicates with earth via NASA's Deep Space Network, made up of listening stations all over the world.  Once on earth, the data makes its way to the Chandra X-Ray Center, in Cambridge, Massachusetts.",
-          noClickText: "Chandra here!.",
+         text: "Chandra's solar collectors are used to power the telescope's detectors and its radio contact with the earth.  The electricity is also used to heat the mirrors to keep them from deforming in the cold temperatures of space.",
+         noClickText: "Chandra's solar collectors are used\n to power the telescope's detectors\n and its radio contact with the earth.\n  The electricity is also used\n to heat the mirrors to keep them from\n deforming in the cold temperatures\n of space.",
          pause: 6000,
          textOffset: {x: 0, y: -0.5, z: -1},
-         textRotate: {x: 0, y: 0, z: 0}
+         textRotate: {x: 0, y: 0, z: 0},
+         next: "tour4",
         },
-  tour1f:{dur: "1000",
-         next: "tour1a",
+  tour4:{dur: "6000",
+         audio: "",
+         playWhile: false,
+         text: "Chandra aims using high-precision gyroscopes.  Its thrusters, just above and below the mirrors, control the spacecraft's orbit, and help stabilize it after aiming at a new location.",
+         noClickText: "Chandra aims with high-precision \ngyroscopes.  Its thrusters, just above\n and below the mirrors, control\n the spacecraft's orbit, and help \nstabilize it after aiming at a new\n location.",
+         pause: 6000,
+         textOffset: {x: 1, y: -0.25, z: -0.5},
+         textRotate: {x: 0, y: -70, z: 0},
+         next: "tour5",
+        },
+  tour5:{dur: "1500",
+         audio: "",
+         playWhile: false,
+         text: "The antenna above and below Chandra is its link to NASA's Deep Space Network, made up of listening stations all over the earth.  Once on earth, the data makes its way to the Chandra X-Ray Center, in Cambridge, Massachusetts.",
+          noClickText: "The antenna above and below\n Chandra is its link to NASA's\n Deep Space Network, made up of\n listening stations all over the earth.\n  Once on earth, the data makes its\n way to the Chandra X-Ray Center,\n in Cambridge, Massachusetts.",
+         pause: 6000,
+         textOffset: {x: 1, y: -0.05, z: 0.6},
+         textRotate: {x: 0, y: -100, z: 0},
+         next: "tour7",
+        },
+  tour7:{dur: "10000",
          audio: "",
          playWhile: false,
          text: "",
-         noClickText: "Chandra here!.",
+         noClickText: "",
          pause: 6000,
-         textOffset: {x: 0, y: -0.5, z: -1},
-         textRotate: {x: 0, y: 0, z: 0}
+         textOffset: {x: 1, y: -0.25, z: 0.45},
+         textRotate: {x: 0, y: -100, z: 0},
+         next: "tour6",
         },
 };
 
@@ -297,7 +317,7 @@ AFRAME.registerComponent('alongpathevent', {
     var advanceTourSegment = function() {
 
       // Get the alongpath attribute from the camera entity.
-      var el = document.getElementById("mainCamera");
+      var el = document.getElementById("mainCameraRig");
       var alongpath = el.getAttribute("alongpath");
 
       // What path are we on (without the '#')?
@@ -323,14 +343,14 @@ AFRAME.registerComponent('alongpathevent', {
       advanceTourSegment();
 
       // Listen for the end of the next segment of the tour.
-      document.getElementById("mainCamera")
+      document.getElementById("mainCameraRig")
         .addEventListener('movingended', moveEndHandler);
     };
 
     var moveEndHandler = function(event) {
 
       // Find the name of the path we just finished.
-      var mainCamera = document.getElementById("mainCamera");
+      var mainCamera = document.getElementById("mainCameraRig");
       var currentPath = mainCamera.getAttribute("alongpath").curve.substring(1)
 
       // Display the text for the (end of the) path.
@@ -355,6 +375,7 @@ AFRAME.registerComponent('alongpathevent', {
       var textRot = tour[currentPath].textRotate;
       textHolder.setAttribute("position", textPos);
       textHolder.setAttribute("rotation", textRot);
+      //console.log("rendering text at:", textPos, textRot, textHolder);
 
       // Play the audio for the (end of the) path.
       var sound = document.getElementById(tour[currentPath].audio);
@@ -426,7 +447,7 @@ AFRAME.registerComponent('alongpathevent', {
   },
 
   update: function() {
-    console.log("update called of alongpathevent!");
+    //console.log("update called of alongpathevent!");
   }
 });
 
@@ -449,7 +470,7 @@ AFRAME.registerComponent('rept', {
 
     parent.add(mesh);
 
-    console.log(this.data.N.x, "---", this.data.N.y, "---", this.data.N.z);
+    //console.log(this.data.N.x, "---", this.data.N.y, "---", this.data.N.z);
     for (i = 0; i < this.data.N.x; i++) {
       for (j = 0; j < this.data.N.y; j++) {
         for (k = 0; k < this.data.N.z; k++) {
